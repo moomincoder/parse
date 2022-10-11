@@ -1,4 +1,6 @@
 use std::ops::RangeBounds;
+use std::time::Duration;
+use std::thread::sleep;
 
 // a simple command line parsing program
 use clap::Parser;
@@ -22,11 +24,27 @@ fn main() {
         }
     }
 
-    let result = std::fs::read_to_string("test.txt");
-    let content = match result {
-        Ok(content) => { content }
-        Err(error) => { panic!("Problem: {}", error); }
-    };
-    println!("File contents: {}", content);
+    // let result = std::fs::read_to_string("test.txt");
+    // let content = match result {
+    //     Ok(content) => { content }
+    //     Err(error) => { panic!("Problem: {}", error); }
+    // };
+    // println!("File contents: {}", content);
 
+    status_indicator();
+
+}
+
+fn status_indicator() {
+    let pb = indicatif::ProgressBar::new(100);
+    for i in 0..100 {
+        do_hard_work();
+        pb.println(format!("[+] finished with #{}", i));
+        pb.inc(1);
+    }
+    pb.finish_with_message("done");
+}
+
+fn do_hard_work() {
+    sleep(Duration::from_millis(2));
 }
